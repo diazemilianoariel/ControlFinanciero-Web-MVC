@@ -1,0 +1,205 @@
+﻿@{
+    ViewData["Title"] = "Bienvenida";
+}
+
+<section class="mp-hero p-4 p-md-5 mb-4">
+    <div class="row align-items-center g-4">
+        <div class="col-12 col-lg-7">
+            <span class="badge text-bg-primary mb-3">Manejador de Presupuesto</span>
+            <h1 class="display-5 fw-semibold mb-3">Organizá tus finanzas, sin complicarte</h1>
+            <p class="lead mb-4">
+                Esta plataforma te ayuda a ordenar tus cuentas, registrar movimientos y entender en qué se va tu dinero,
+                para que tomes mejores decisiones.
+            </p>
+
+            <div class="d-flex flex-column flex-sm-row gap-2">
+                <a asp-controller="TiposCuentas" asp-action="Crear" class="btn btn-primary btn-lg">
+                    Crear tu primer tipo de cuenta
+                </a>
+                <a class="btn btn-outline-secondary btn-lg" href="#como-funciona">
+                    Cómo funciona
+                </a>
+            </div>
+
+            <p class="text-muted mt-3 mb-0">
+                Tip: empezá creando tipos como <strong>Efectivo</strong>, <strong>Banco</strong>, <strong>Tarjeta</strong>.
+            </p>
+        </div>
+
+        <div class="col-12 col-lg-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div class="fw-semibold">Resumen</div>
+                        <span class="badge text-bg-light border">Ejemplo</span>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <div class="mp-stat">
+                                <div class="mp-stat__label">Ingresos</div>
+                                <div class="mp-stat__value text-success">$ 1.250.000</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mp-stat">
+                                <div class="mp-stat__label">Gastos</div>
+                                <div class="mp-stat__value text-danger">$ 780.000</div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mp-stat">
+                                <div class="mp-stat__label">Saldo estimado</div>
+                                <div class="mp-stat__value">$ 470.000</div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-3" />
+                    <div class="small text-muted">
+                        Una vista simple para ver tu situación y actuar rápido.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <h2 class="h3 fw-semibold mb-3">Qué podés hacer</h2>
+    <div class="row g-3">
+        <div class="col-12 col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="mp-icon mb-3" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 7H4" />
+                            <path d="M20 12H4" />
+                            <path d="M20 17H4" />
+                            <path d="M8 7v10" />
+                        </svg>
+                    </div>
+                    <h3 class="h5 mb-2">Ordenar tus cuentas</h3>
+                    <p class="text-muted mb-0">
+                        Definí tipos de cuenta y mantené tu información clara y estructurada desde el primer día.
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-0 pt-0">
+                    <a asp-controller="TiposCuentas" asp-action="Crear" class="btn btn-sm btn-outline-primary">
+                        Crear tipo de cuenta
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="mp-icon mb-3" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 1v22" />
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
+                        </svg>
+                    </div>
+                    <h3 class="h5 mb-2">Registrar movimientos</h3>
+                    <p class="text-muted mb-0">
+                        Cargá ingresos y gastos para conocer tu balance y detectar hábitos de consumo.
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-0 pt-0">
+                    <span class="badge text-bg-secondary">Próximamente</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="mp-icon mb-3" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19V5" />
+                            <path d="M4 19h16" />
+                            <path d="M8 17v-6" />
+                            <path d="M12 17V9" />
+                            <path d="M16 17v-3" />
+                        </svg>
+                    </div>
+                    <h3 class="h5 mb-2">Ver reportes y tendencias</h3>
+                    <p class="text-muted mb-0">
+                        Analizá tu mes, compará períodos y tomá decisiones basadas en datos.
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-0 pt-0">
+                    <span class="badge text-bg-secondary">Próximamente</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="como-funciona" class="mb-5">
+    <h2 class="h3 fw-semibold mb-3">Cómo funciona</h2>
+    <div class="row g-3">
+        <div class="col-12 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="mp-step">1</div>
+                        <div>
+                            <div class="fw-semibold mb-1">Creá tus tipos de cuenta</div>
+                            <div class="text-muted">
+                                Por ejemplo: Efectivo, Banco, Tarjeta, Inversiones.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="mp-step">2</div>
+                        <div>
+                            <div class="fw-semibold mb-1">Categorizá y cargá movimientos</div>
+                            <div class="text-muted">
+                                Ingresos y gastos, para ver claramente dónde estás y hacia dónde vas.
+                            </div>
+                            <span class="badge text-bg-secondary mt-2">Próximamente</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="mp-step">3</div>
+                        <div>
+                            <div class="fw-semibold mb-1">Consultá tu resumen y reportes</div>
+                            <div class="text-muted">
+                                Detectá oportunidades de ahorro y mantené el control mes a mes.
+                            </div>
+                            <span class="badge text-bg-secondary mt-2">Próximamente</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mp-callout p-4 p-md-5">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+        <div>
+            <h2 class="h4 fw-semibold mb-1">Listo para empezar</h2>
+            <p class="text-muted mb-0">Creá tu primer tipo de cuenta y comenzá a organizar tu presupuesto.</p>
+        </div>
+        <div>
+            <a asp-controller="TiposCuentas" asp-action="Crear" class="btn btn-primary btn-lg">
+                Empezar ahora
+            </a>
+        </div>
+    </div>
+</section>
