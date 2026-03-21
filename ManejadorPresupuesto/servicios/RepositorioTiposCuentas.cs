@@ -9,7 +9,9 @@ namespace ManejadorPresupuesto.servicios
     {
 
 
-        void Crear(TipoCuenta tipocuenta);
+        Task Crear(TipoCuenta tipocuenta);
+
+        Task<bool> Existe(string nombre, int usuarioId);
     }
 
 
@@ -18,20 +20,17 @@ namespace ManejadorPresupuesto.servicios
     {
 
         private readonly string connectionString;
-
-
-     
         public RepositorioTiposCuentas(IConfiguration configuration)
         {
             connectionString = configuration.GetConnectionString("DefaultConnection");
 
         }
 
-        public void Crear(TipoCuenta tipocuenta)
+        public async Task Crear(TipoCuenta tipocuenta)
         {
 
             using var connection = new SqlConnection(connectionString);
-            var id = connection.QuerySingle<int>(@"INSERT INTO TiposCuentas (Nombre, UsuarioId, Orden)
+            var id  = await connection.QuerySingleAsync<int>(@"INSERT INTO TiposCuentas (Nombre, UsuarioId, Orden)
                                                             VALUES (@Nombre, @UsuarioId, 0);
                                                             SELECT SCOPE_IDENTITY();", tipocuenta);
 
@@ -42,19 +41,20 @@ namespace ManejadorPresupuesto.servicios
 
 
 
+        public async Task<bool> Existe(string nombre, int usuarioId)
+        {
+            using var connection = new SqlConnection(connectionString);
+            var existe = await connection.QueryFirstOrDefaultAsync<int>(
+                                                                        @"Select 1 from TiposCuentas where Nombre = @Nombre AND UsuarioId = @UsuarioId;", new {nombre,usuarioId});
+
+            return existe == 1;
 
 
-
-
-
-
-
-
-
-
-
-
-
+        }
 
     }
+
+
+
+
 }

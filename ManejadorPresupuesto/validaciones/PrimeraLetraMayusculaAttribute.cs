@@ -10,6 +10,10 @@ namespace ManejadorPresupuesto.validaviones
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
+
+
+
+
             if(value==null|| string.IsNullOrEmpty(value.ToString()))
             {
                 return ValidationResult.Success;
