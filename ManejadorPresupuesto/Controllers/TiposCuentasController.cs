@@ -12,12 +12,23 @@ namespace ManejadorPresupuesto.Controllers
     {
 
         private readonly IRepositorioTiposCuentas repositorioTiposCuentas;
+        private readonly IServicioUsuarios servicioUsuarios;
 
-
-        public TiposCuentasController(IRepositorioTiposCuentas repositorioTiposCuentas)
+        public TiposCuentasController(IRepositorioTiposCuentas repositorioTiposCuentas, IServicioUsuarios servicioUsuarios)
         {
             this.repositorioTiposCuentas = repositorioTiposCuentas;
+            this.servicioUsuarios = servicioUsuarios;
         }
+
+
+        // Acción para mostrar la lista de tipos de cuentas.
+        public async Task<IActionResult> Index()
+        {
+            var usuarioId = servicioUsuarios.ObtenerUsuarioId();
+            var tiposCuentas = await repositorioTiposCuentas.Obtener(usuarioId);
+            return View(tiposCuentas);
+        }
+
 
         // Acción para mostrar la vista de creación de un nuevo tipo de cuenta.
         // si el de abajo es un HttpPost, este es un HttpGet, que se encarga de mostrar la vista para crear un nuevo tipo de cuenta.
@@ -38,7 +49,7 @@ namespace ManejadorPresupuesto.Controllers
 
 
 
-            tipocuenta.UsuarioId = 1;
+            tipocuenta.UsuarioId = servicioUsuarios.ObtenerUsuarioId();
 
 
 
@@ -53,15 +64,78 @@ namespace ManejadorPresupuesto.Controllers
 
 
             await repositorioTiposCuentas.Crear(tipocuenta);
-            return View();
+            return RedirectToAction("Index");
         }
 
+
+        // me va apermitir editar un tipo de cuenta, pero primero tengo que validar que el tipo de cuenta exista y que el usuario tenga permiso para acceder a ese tipo de cuenta, por eso necesito el ID del tipo de cuenta y el ID del usuario, para validar que el tipo de cuenta exista y que el usuario tenga permiso para acceder a ese tipo de cuenta, si no existe o no tiene permiso, redirijo a una página de error, si existe y tiene permiso, muestro la vista para editar el tipo de cuenta.
+        [HttpGet]
+        public async Task<ActionResult> Editar(int id)
+        {
+            var usuarioId = servicioUsuarios.ObtenerUsuarioId();
+            var tipoCuenta = await repositorioTiposCuentas.ObtenerPorId(id, usuarioId);
+            if (tipoCuenta is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            return View(tipoCuenta);
+        }
+
+
+
+        [HttpPost]
+        public async Task<ActionResult> Editar(TipoCuenta tipocuenta)
+        {
+           
+            var usuarioId = servicioUsuarios.ObtenerUsuarioId();
+            var tipoCuentaExiste = await repositorioTiposCuentas.ObtenerPorId(tipocuenta.Id, usuarioId);
+
+            if (tipoCuentaExiste is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+
+        
+            await repositorioTiposCuentas.Actualizar(tipocuenta);
+            return RedirectToAction("Index");
+        }
+
+
+
+
+
+        public async Task <IActionResult> Borrar(int id)
+        {
+            var usuarioId = servicioUsuarios.ObtenerUsuarioId();
+            var tipoCuenta = await repositorioTiposCuentas.ObtenerPorId(id, usuarioId);
+
+            if (tipoCuenta is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+
+            return View(tipoCuenta);
+
+        }
+
+        [HttpPost]
+        public async Task <IActionResult> BorrarTipoCuenta(int id)
+        {
+            var usuarioId = servicioUsuarios.ObtenerUsuarioId();
+            var tipoCuenta = await repositorioTiposCuentas.ObtenerPorId(id, usuarioId);
+            if (tipoCuenta is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            await repositorioTiposCuentas.Borrar(id);
+            return RedirectToAction("Index");
+        }
 
 
         [HttpGet]
         public async Task<IActionResult> VerificarExisteTipoCuenta(string nombre)
         {
-            var usuarioId = 1;
+            var usuarioId = servicioUsuarios.ObtenerUsuarioId();
             var yaExisteTipoCuenta = await repositorioTiposCuentas.Existe(nombre, usuarioId);
             if (yaExisteTipoCuenta)
             {

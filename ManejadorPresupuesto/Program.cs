@@ -2,9 +2,10 @@ using ManejadorPresupuesto.servicios;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// agregamos los servicios al contenedor de dependencias
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IRepositorioTiposCuentas, RepositorioTiposCuentas>();
+builder.Services.AddTransient<IServicioUsuarios, ServicioUsuarios>();
 
 
 
