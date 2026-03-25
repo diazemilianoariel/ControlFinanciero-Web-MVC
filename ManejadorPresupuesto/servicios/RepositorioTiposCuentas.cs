@@ -14,6 +14,7 @@ namespace ManejadorPresupuesto.servicios
         Task<bool> Existe(string nombre, int usuarioId);
         Task<IEnumerable<TipoCuenta>> Obtener(int usuarioId);
         Task<TipoCuenta> ObtenerPorId(int id, int usuarioId);
+        Task Ordenar(IEnumerable<TipoCuenta> tiposCuentasOrdenados);
     }
 
 
@@ -59,7 +60,7 @@ namespace ManejadorPresupuesto.servicios
         {
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryAsync<TipoCuenta>(
-                                                                        @"Select Id, Nombre, UsuarioId from TiposCuentas where UsuarioId = @UsuarioId;", new { usuarioId });
+                                                                        @"Select Id, Nombre, Orden from TiposCuentas where UsuarioId = @UsuarioId ORDER BY Orden;", new { usuarioId });
 
 
         }
@@ -90,5 +91,17 @@ namespace ManejadorPresupuesto.servicios
             using var connection = new SqlConnection(connectionString);
             await connection.ExecuteAsync(@"DELETE FROM TiposCuentas WHERE Id = @Id", new { id });
         }
+
+
+        // Utilizando Dapper para actualizar el orden de los tipos de cuentas
+        public async Task Ordenar(IEnumerable<TipoCuenta> tiposCuentasOrdenados)
+        {
+            var query = "UPDATE TiposCuentas SET Orden = @Orden WHERE Id = @Id";
+            using var connection = new SqlConnection(connectionString);
+            await connection.ExecuteAsync(query, tiposCuentasOrdenados);
+
+        }
+
+
     }
 }

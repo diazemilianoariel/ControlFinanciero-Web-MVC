@@ -8,7 +8,8 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<h5> El tipo de cuenta se refiere a como podemos agrupar cuentas. 
+<h5>
+    El tipo de cuenta se refiere a como podemos agrupar cuentas.
     Ejemplo: Prestamos, Tarjetas de Credito etc.
 </h5>
 
@@ -24,11 +25,12 @@
         </tr>
     </thead>
 
-    <tbody>
+    <tbody id="reordenable">
         @foreach (var TipoCuenta in Model)
         {
             <tr>
                 <td>
+                    <input type="hidden" value="@TipoCuenta.Id" class="ids" />
                     <a asp-action="Editar" asp-route-id="@TipoCuenta.Id" class="btn btn-sm btn-secondary">Editar</a>
                     <a asp-action="Borrar" asp-route-id="@TipoCuenta.Id" class="btn btn-sm btn-danger">Borrar</a>
                 </td>
@@ -37,3 +39,55 @@
         }
     </tbody>
 </table>
+
+
+
+@section Scripts {
+    <script>
+        const urlOrdenar = '@Url.Action("ordenar")';
+
+        $(function () {
+            // Inicialización de Sortable
+            $("#reordenable").sortable({
+                stop: async function (e, ui) {
+                    await actualizarOrdenes();
+                }
+            });
+
+            // Función principal para coordinar la actualización
+            async function actualizarOrdenes() {
+                const ids = obtenerIdsDeElementos();
+                await enviarIdsAlBackEnd(ids);
+            }
+
+            // Captura los valores de los inputs con clase .ids
+            function obtenerIdsDeElementos() {
+                return $(".ids").map(function () {
+                    return $(this).val();
+                }).get();
+            }
+
+            // Envía la información al controlador
+            async function enviarIdsAlBackEnd(ids) {
+                const data = JSON.stringify(ids);
+
+                try {
+                    const response = await fetch(urlOrdenar, {
+                        method: 'POST',
+                        body: data,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        console.error("Error en la respuesta del servidor");
+                    }
+                } catch (error) {
+                    console.error("Error al enviar los datos:", error);
+                }
+            }
+        });
+    </script>
+}
+

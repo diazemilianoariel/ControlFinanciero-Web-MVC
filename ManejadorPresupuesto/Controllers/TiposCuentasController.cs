@@ -86,7 +86,7 @@ namespace ManejadorPresupuesto.Controllers
         [HttpPost]
         public async Task<ActionResult> Editar(TipoCuenta tipocuenta)
         {
-           
+
             var usuarioId = servicioUsuarios.ObtenerUsuarioId();
             var tipoCuentaExiste = await repositorioTiposCuentas.ObtenerPorId(tipocuenta.Id, usuarioId);
 
@@ -95,7 +95,7 @@ namespace ManejadorPresupuesto.Controllers
                 return RedirectToAction("NoEncontrado", "Home");
             }
 
-        
+
             await repositorioTiposCuentas.Actualizar(tipocuenta);
             return RedirectToAction("Index");
         }
@@ -104,7 +104,7 @@ namespace ManejadorPresupuesto.Controllers
 
 
 
-        public async Task <IActionResult> Borrar(int id)
+        public async Task<IActionResult> Borrar(int id)
         {
             var usuarioId = servicioUsuarios.ObtenerUsuarioId();
             var tipoCuenta = await repositorioTiposCuentas.ObtenerPorId(id, usuarioId);
@@ -119,7 +119,7 @@ namespace ManejadorPresupuesto.Controllers
         }
 
         [HttpPost]
-        public async Task <IActionResult> BorrarTipoCuenta(int id)
+        public async Task<IActionResult> BorrarTipoCuenta(int id)
         {
             var usuarioId = servicioUsuarios.ObtenerUsuarioId();
             var tipoCuenta = await repositorioTiposCuentas.ObtenerPorId(id, usuarioId);
@@ -143,6 +143,32 @@ namespace ManejadorPresupuesto.Controllers
             }
             return Json(true);
 
+        }
+
+
+
+        // no puedo confiar en la data que viene del  usario es por eso que debo validar que los IDs que vienen del usuario pertenecen al usuario, para eso necesito obtener los tipos de cuentas del usuario y comparar los IDs que vienen del usuario con los IDs de los tipos de cuentas del usuario, si hay algún ID que no pertenece al usuario, entonces no puedo confiar en la data y debo retornar un error, si todos los IDs pertenecen al usuario, entonces puedo confiar en la data y puedo actualizar el orden de los tipos de cuentas.
+        [HttpPost]
+        public async Task<IActionResult> Ordenar([FromBody] int[] ids)
+        {
+
+            var usuarioId = servicioUsuarios.ObtenerUsuarioId();
+            var tiposCuentas = await repositorioTiposCuentas.Obtener(usuarioId);
+
+            // aca lo que hago es obtener los IDs de los tipos de cuentas del usuario y compararlos con los IDs que vienen del usuario, si hay algún ID que no pertenece al usuario, entonces no puedo confiar en la data y debo retornar un error, si todos los IDs pertenecen al usuario, entonces puedo confiar en la data y puedo actualizar el orden de los tipos de cuentas.
+            var idsTipoCuentas = tiposCuentas.Select(x => x.Id);
+            var idsTipoCuentasNoPertenecenAlUsuario = ids.Except(idsTipoCuentas).ToList();
+
+            if(idsTipoCuentasNoPertenecenAlUsuario.Count() > 0)
+            {
+                return Forbid();
+            }
+
+            var tiposCuentasOrdenados = ids.Select((valor, indice) => new TipoCuenta() { Id = valor, Orden = indice + 1 }).AsEnumerable();
+
+            await repositorioTiposCuentas.Ordenar(tiposCuentasOrdenados);
+
+            return Ok();
         }
     }
 }
